@@ -3,6 +3,7 @@ from typing import Any
 import discord
 from tortoise.queryset import QuerySet
 
+import config
 from bot import Sentinel, SentinelContext
 from models import Word
 from utils import DefaultEmbed
@@ -27,10 +28,10 @@ class Messages(discord.Cog):
 
         leaderboard_content = ""  # define empty string to add data further down the execution
 
-        for i, word in enumerate(query_set, 1):
-            leaderboard_content += f"{i}. `{word.word}` - **{word.times_used}**\n"  # add data to the empty string
+        for word in query_set:
+            leaderboard_content += f"- `{word.word}` - **{word.times_used}**\n"  # add data to the empty string
 
-        leaderboard = f"### X. `WORD` - TIMES USED\n{leaderboard_content}"
+        leaderboard = f"`WORD - TIMES USED`\n{leaderboard_content}"
 
         embed = DefaultEmbed()  # Using DefaultEmbed from utils.py
         embed.title = "10 most popular words:"
@@ -40,6 +41,10 @@ class Messages(discord.Cog):
 
     @discord.Cog.listener()
     async def on_message(self, message: discord.Message):
+        # Ignore message if it was sent by a bot, and IGNORE_BOT_MESSAGES is set to True in config.
+        if message.author.bot and config.IGNORE_BOT_MESSAGES:
+            return
+
         # Message Processor function for any DATA related workload
         await self.bot.process_message(message)
 

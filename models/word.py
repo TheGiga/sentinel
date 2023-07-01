@@ -2,6 +2,8 @@ import re
 from typing import Any
 from tortoise.models import Model
 from tortoise import fields
+
+import config
 from utils import Debugger
 
 
@@ -22,14 +24,30 @@ class Word(Model):
     async def process_words(cls, text: str):
         # Creating new instance of Debugger for this specific method.
         debugger = Debugger(source="Word Processor", obj=cls.process_words)
+        debugger.print(f"Received text: {text}")
 
         to_update: list = []  # these entries will be updates in bulk after the operation ends.
-        words = re.sub(r'\W+', ' ', text).split()  # removes any special characters, commas and dots
+
+        # removing any links and creating processed_text variable to use later
+        processed_text = re.sub(config.URL_REGEX, '', text)
+        processed_text = re.sub(r'\W+', ' ', processed_text)  # removes any special characters, commas and dots
+
+        debugger.print(f'Processed text: {processed_text}')
+
+        words = processed_text.split()
 
         debugger.print(f"Found possible word entries: {words}")
 
         for word in words:
-            # skips the word if it has digits.
+            # Skips the word if it is longer than the limit.
+            if len(word) > config.MAXIMUM_WORD_LENGTH:
+                debugger.print(f"{word[:config.MAXIMUM_WORD_LENGTH]}... < is too long, skipping")
+                continue
+            elif len(word) < config.MINIMUM_WORD_LENGTH:
+                debugger.print(f"{word} < is too short, skipping")
+                continue
+
+            # skips the word if it has digits. (usually words do not contain any lol)
             if re.match(r'\d', word):
                 debugger.print(f"{word} < contains digits")
                 continue
@@ -45,6 +63,8 @@ class Word(Model):
             else:
                 debugger.print(f"{word} < adding word for further bulk update")
                 to_update.append(entry)
+
+        debugger.print(f"Words for bulk update: {to_update}")
 
         # Updates all non-new words in a bulk, if any
         await Word.bulk_update(to_update, fields=['times_used']) if to_update else None
