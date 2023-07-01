@@ -10,7 +10,7 @@ class SentinelContext(discord.ApplicationContext):
         self._user_instance = None
 
     @property
-    def user_instance(self) -> 'User':
+    def user_instance(self):  # -> 'User':
         """
         :return: User instance set during overall_check ( bot.py, before_invoke_check() ), instance of models.User
         """
