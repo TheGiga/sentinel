@@ -32,6 +32,8 @@ class Word(Model):
         :return: None
         """
         # Creating new instance of Debugger for this specific method.
+        text = text.lower()  # using only lower-case strings.
+
         debugger = Debugger(source="Word Processor", obj=cls.process_words)
         debugger.print(f"Received text: {text}")
 
