@@ -18,10 +18,19 @@ class Word(Model):
         return self.__repr__()
 
     def __repr__(self):
-        return f"Word(\"{self.word}\", {self.times_used=})"
+        try:
+            return f"Word(\"{self.word}\", {self.times_used=})"
+        except AttributeError:
+            return f"Word(undefined word)"
 
     @classmethod
     async def process_words(cls, text: str):
+        """
+        Processes words from a string, removing any special characters and digits, adds their use count to database.
+
+        :param text: Text to process words from.
+        :return: None
+        """
         # Creating new instance of Debugger for this specific method.
         debugger = Debugger(source="Word Processor", obj=cls.process_words)
         debugger.print(f"Received text: {text}")
@@ -30,7 +39,8 @@ class Word(Model):
 
         # removing any links and creating processed_text variable to use later
         processed_text = re.sub(config.URL_REGEX, '', text)
-        processed_text = re.sub(r'\W+', ' ', processed_text)  # removes any special characters, commas and dots
+        # removes any special characters, commas and dots
+        processed_text = re.sub(config.WORD_REGEX, ' ', processed_text)
 
         debugger.print(f'Processed text: {processed_text}')
 

@@ -1,10 +1,11 @@
 import os
 import asyncio
 from dotenv import load_dotenv
+from tortoise import connections
 
 load_dotenv()
 
-from tortoise import connections
+# Any project imports should be used after the load of .env
 from bot import SENTINEL
 from database import db_init
 

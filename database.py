@@ -1,6 +1,4 @@
-import logging
 import config
-
 from tortoise import Tortoise
 
 
@@ -11,6 +9,5 @@ async def db_init():
     )
 
     print("✔ Database initialised!")
-    logging.info("Database initialised!")
 
     await Tortoise.generate_schemas(safe=True)

@@ -15,4 +15,5 @@ MAXIMUM_WORD_LENGTH: int = 45
 # REGEX
 URL_REGEX: str = \
     r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
+WORD_REGEX: str = r'\W+'
 
