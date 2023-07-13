@@ -16,16 +16,16 @@ class Messages(discord.Cog):
 
     # Creating the words slash command group.
     words_command_group = discord.SlashCommandGroup(
-        name='words',
+        name="words",
         description="Any commands related to overall word data"
     )
 
-    @words_command_group.command(name='search', description='Search for a specific word.')
+    @words_command_group.command(name="search", description="Search for a specific word.")
     async def command_words_search(
             self, ctx: SentinelContext,
             prompt: discord.Option(
                 str, max_length=config.MAXIMUM_WORD_LENGTH, min_length=config.MINIMUM_WORD_LENGTH,
-                description="Should not contain any special characters, digits or spaces."
+                description="Should not contain any special characters, digits or spaces." # noqa: trips over this??
             )
             # max_length and min_length are bound to config values that are used in `Word.process_words()`.
             # Since those values can be changed after some time of data gathering, this can cause a bug with inability
