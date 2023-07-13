@@ -37,7 +37,7 @@ class Word(Model):
         debugger = Debugger(source="Word Processor", obj=cls.process_words)
         debugger.print(f"Received text: {text}")
 
-        to_update: list = []  # these entries will be updates in bulk after the operation ends.
+        to_bulk_update: dict[str, Word] = {}  # these entries will be updates in bulk after the operation ends.
 
         # removing any links and creating processed_text variable to use later
         processed_text = re.sub(config.URL_REGEX, '', text)
@@ -66,17 +66,23 @@ class Word(Model):
 
             # Creating OR getting an entry
             entry, created = await cls.get_or_create(word=word)
-            entry.times_used = entry.times_used + 1  # Incrementing value of total times used.
 
             if created:
+                entry.times_used = entry.times_used + 1  # Incrementing value of total times used.
                 # saving any new words that aren't in a database yet right now to avoid IntegrityError-s
-                debugger.print(f"{word} < saved new word")
                 await entry.save()
+                debugger.print(f"{word} < saved new word")
             else:
-                debugger.print(f"{word} < adding word for further bulk update")
-                to_update.append(entry)
+                if not to_bulk_update.get(word):  # Adds value to "to_bulk_update" dict if not in there already.
+                    to_bulk_update[word] = entry
 
-        debugger.print(f"Words for bulk update: {to_update}")
+                to_bulk_update[word].times_used += 1
+
+                debugger.print(f"{word} < added word for further bulk update")
+
+        debugger.print(f"Words for bulk update: {to_bulk_update}")
 
         # Updates all non-new words in a bulk, if any
-        await Word.bulk_update(to_update, fields=['times_used']) if to_update else None
+        bulk_update_result = \
+            await Word.bulk_update(to_bulk_update.values(), fields=['times_used']) if to_bulk_update else None
+        debugger.print(f"Number of updates from bulk: {bulk_update_result}")
