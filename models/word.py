@@ -32,17 +32,19 @@ class Word(Model):
         :return: None
         """
         # Creating new instance of Debugger for this specific method.
-        text = text.lower()  # using only lower-case strings.
-
         debugger = Debugger(source="Word Processor", obj=cls.process_words)
         debugger.print(f"Received text: {text}")
+
+        text = text.lower()  # using only lower-case strings.
 
         to_bulk_update: dict[str, Word] = {}  # these entries will be updates in bulk after the operation ends.
 
         # removing any links and creating processed_text variable to use later
-        processed_text = re.sub(config.URL_REGEX, '', text)
+        processed_text = re.sub(config.URL_REGEX, ' ', text)
+        # removes any custom emojis
+        processed_text = re.sub(config.EMOJI_REGEX, ' ', processed_text)
         # removes any special characters, commas and dots
-        processed_text = re.sub(config.WORD_REGEX, ' ', processed_text)
+        processed_text = re.sub(config.NON_WORD_REGEX, ' ', processed_text)
 
         debugger.print(f'Processed text: {processed_text}')
 

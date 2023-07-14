@@ -1,7 +1,7 @@
 import discord
 import config
 from abc import ABC
-from models import Word
+from models import Word, Emoji
 
 
 class SentinelContext(discord.ApplicationContext):
@@ -40,6 +40,13 @@ class Sentinel(discord.Bot, ABC):
         # processing words for data collection, anything related to words specifically is done in following function
         # for some reason throws warning at me, although works as intended. Using type: ignore
         await Word.process_words(message.clean_content)  # type: ignore
+        # processing emojis for data collection, anything related to them is in this function
+        await Emoji.process_emojis(message.content)
+
+        # currently, config.EMOJI_REGEX is used in both Emoji and Word processing functions,
+        # it would probably be better to remove any emojis from string before even giving it to "Word.process_words",
+        # but I don't think this has any significant impact on performance. I might actually allow emoji names to be
+        # counted as words.
 
     async def get_application_context(
             self, interaction: discord.Interaction, cls=SentinelContext
