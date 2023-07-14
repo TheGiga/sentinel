@@ -69,6 +69,7 @@ class Emoji(Model):
             else:
                 if not to_bulk_update.get(emoji_id):  # Adds value to "to_bulk_update" dict if not in there already.
                     to_bulk_update[emoji_id] = entry
+                    debugger.print(f"Creating entry in 'to_bulk_update' for {entry}")
 
                 to_bulk_update[emoji_id].times_used += 1
 

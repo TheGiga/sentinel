@@ -17,4 +17,4 @@ URL_REGEX: str = \
     r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
 WORD_REGEX: str = r'\w+'
 NON_WORD_REGEX: str = r'\W+'
-EMOJI_REGEX: str = r'<:[A-Za-z]+:[0-9]{18,20}>'
+EMOJI_REGEX: str = r'(<a?):\w+:(\d{18,20}>)'

@@ -90,7 +90,7 @@ class Messages(discord.Cog):
     async def command_emojis_search(
             self, ctx: SentinelContext,
             emoji_id: discord.Option(
-                name="emoji", description="Name of the emoji (case sensitive)", autocomplete=emoji_search
+                name="emoji", description="Name of the emoji (case sensitive)", autocomplete=emoji_search  # noqa: :(
             )
     ):
         result = await Emoji.get_or_none(id=emoji_id)
