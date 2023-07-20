@@ -9,7 +9,7 @@ from utils import Debugger
 
 class Emoji(Model):
     id = fields.IntField(pk=True, generated=False)
-    name = fields.TextField()
+    name = fields.TextField(unique=False)
     times_used = fields.IntField(default=0)
 
     def __init__(self, **kwargs: Any):
@@ -58,8 +58,17 @@ class Emoji(Model):
             emoji_name = raw_emoji[1]  # [1] is Name
             emoji_id = int(raw_emoji[2][:-1])  # [2] is an Id, also, removing `>` from an end of a string
 
-            # Creating OR getting an entry
-            entry, created = await cls.get_or_create(name=emoji_name, id=emoji_id)
+            created = False
+            entry = await cls.get_or_none(id=emoji_id)
+
+            # Creating an entry if absent
+            if not entry:
+                entry = await cls.create(name=emoji_name, id=emoji_id)
+                created = True
+
+            if entry.name != emoji_name:  # If emojis name got changed, changing its name in the database as well...
+                entry.name = emoji_name
+                await entry.save()
 
             if created:
                 entry.times_used = entry.times_used + 1  # Incrementing value of total times used.
