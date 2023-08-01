@@ -1,7 +1,7 @@
 import discord
 import config
 from abc import ABC
-from models import Word, Emoji
+from sentinel.models import Word, Emoji
 
 
 class SentinelContext(discord.ApplicationContext):

@@ -1,10 +1,11 @@
 from dataclasses import dataclass, field
 
 DB_URL: str = 'sqlite://bot.db'
+DB_MODELS: list[str] = ['sentinel.models']
 
 # Enabled modules form modules.* directory, f.e "modules.example"
 ENABLED_MODULES: list[str] = [
-    "modules.messages"
+    "sentinel.modules.messages"
 ]
 
 # Whether to ignore messages sent by bot accounts.

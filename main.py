@@ -6,8 +6,8 @@ from tortoise import connections
 load_dotenv()
 
 # Any project imports should be used after the load of .env
-from bot import SENTINEL
-from database import db_init
+from sentinel.bot import SENTINEL
+from sentinel.database import db_init
 
 
 async def main():
