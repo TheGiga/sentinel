@@ -8,9 +8,11 @@ from utils import Debugger
 
 
 class Emoji(Model):
-    id = fields.IntField(pk=True, generated=False)
+    id = fields.IntField(pk=True, unique=True, generated=False)
     name = fields.TextField(unique=False)
     times_used = fields.IntField(default=0)
+
+    # TODO: add server of origin.
 
     def __init__(self, **kwargs: Any):
         super().__init__(**kwargs)
@@ -22,7 +24,7 @@ class Emoji(Model):
         try:
             return f"Emoji(\"{self.raw_name}\", {self.times_used=})"
         except AttributeError:
-            return f"Word(undefined emoji)"
+            return f"Emoji(undefined emoji)"
 
     @property
     def raw_name(self) -> str:

@@ -11,7 +11,7 @@ from utils import DefaultEmbed
 # Not using autocomplete for words, because there are potentially hundreds of thousands of them,
 # but there are not that many emojis overall, something about 100~ per server.
 async def emoji_search(ctx: discord.AutocompleteContext):  # AutoComplete for /emojis search, for better UX.
-    return [discord.OptionChoice(x.name, str(x.id)) for x in await Emoji.all() if ctx.value in x.name]
+    return [discord.OptionChoice(f'{x.name} ({x.id})', str(x.id)) for x in await Emoji.all() if ctx.value in x.name]
 
 
 class Messages(discord.Cog):
@@ -93,7 +93,7 @@ class Messages(discord.Cog):
                 name="emoji", description="Name of the emoji (case sensitive)", autocomplete=emoji_search  # noqa: :(
             )
     ):
-        result = await Emoji.get_or_none(id=emoji_id)
+        result = await Emoji.get_or_none(id=emoji_id)  # emoji_id is STR, but tortoise converts it to INT itself.
 
         if not result:
             await ctx.respond(f":x: Emoji with ID `{emoji_id}` not found!")
