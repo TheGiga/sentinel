@@ -3,9 +3,9 @@ from tortoise.queryset import QuerySet
 from typing import Any
 
 import config
-from bot import Sentinel, SentinelContext
-from models import Word, Emoji
-from utils import DefaultEmbed
+from sentinel.bot import Sentinel, SentinelContext
+from sentinel.models import Word, Emoji
+from sentinel.utils import DefaultEmbed
 
 
 # Not using autocomplete for words, because there are potentially hundreds of thousands of them,

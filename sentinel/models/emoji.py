@@ -4,7 +4,7 @@ from tortoise.models import Model
 from tortoise import fields
 
 import config
-from utils import Debugger
+from sentinel.utils import Debugger
 
 
 class Emoji(Model):
